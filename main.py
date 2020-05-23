@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 
 # Main script for Adafruit Internet of Things Printer 2.  Monitors button
 # for taps and holds, performs periodic actions (Twitter polling by default)
@@ -15,8 +15,13 @@
 # http://www.adafruit.com/products/600 Printer starter pack
 
 from __future__ import print_function
+
 import RPi.GPIO as GPIO
-import subprocess, time, socket
+import datetime
+import socket
+import subprocess
+import time
+
 from PIL import Image
 from Adafruit_Thermal import *
 
@@ -33,25 +38,36 @@ printer      = Adafruit_Thermal("/dev/serial0", 19200, timeout=5)
 # Called when button is briefly tapped.  Invokes time/temperature script.
 def tap():
   GPIO.output(ledPin, GPIO.HIGH)  # LED on while working
-  subprocess.call(["python", "timetemp.py"])
+  now = datetime.datetime.now()
+  release = now + datetime.timedelta(days=3)
+  release_string = release.strftime("%A, %e %B")
+  printer.feed(3)
+  printer.boldOn()
+  printer.print(f"Release {release_string}.")
+  printer.boldOff()
+  printer.feed(3)
+  printer.print("Have a nice day <3")
+  printer.feed(6)
   GPIO.output(ledPin, GPIO.LOW)
 
 
 # Called when button is held down.  Prints image, invokes shutdown process.
 def hold():
   GPIO.output(ledPin, GPIO.HIGH)
-  printer.printImage(Image.open('gfx/goodbye.png'), True)
+  #printer.printImage(Image.open('gfx/goodbye.png'), True)
+  printer.print("Goodbye!")
   printer.feed(3)
   subprocess.call("sync")
-  subprocess.call(["shutdown", "-h", "now"])
+  subprocess.call(["/sbin/shutdown", "-h", "now"])
   GPIO.output(ledPin, GPIO.LOW)
 
 
 # Called at periodic intervals (30 seconds by default).
 # Invokes twitter script.
 def interval():
+  return
   GPIO.output(ledPin, GPIO.HIGH)
-  p = subprocess.Popen(["python", "twitter.py", str(lastId)],
+  p = subprocess.Popen(["python3", "twitter.py", str(lastId)],
     stdout=subprocess.PIPE)
   GPIO.output(ledPin, GPIO.LOW)
   return p.communicate()[0] # Script pipes back lastId, returned to main
@@ -60,9 +76,11 @@ def interval():
 # Called once per day (6:30am by default).
 # Invokes weather forecast and sudoku-gfx scripts.
 def daily():
+  return
+  pass
   GPIO.output(ledPin, GPIO.HIGH)
-  subprocess.call(["python", "forecast.py"])
-  subprocess.call(["python", "sudoku-gfx.py"])
+  subprocess.call(["python3", "forecast.py"])
+  subprocess.call(["python3", "sudoku-gfx.py"])
   GPIO.output(ledPin, GPIO.LOW)
 
 
@@ -80,26 +98,29 @@ GPIO.output(ledPin, GPIO.HIGH)
 
 # Processor load is heavy at startup; wait a moment to avoid
 # stalling during greeting.
-time.sleep(30)
+# time.sleep(30)
+
+printer.print("Hello!")
+printer.feed(3)
 
 # Show IP address (if network is available)
-try:
-	s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-	s.connect(('8.8.8.8', 0))
-	printer.print('My IP address is ' + s.getsockname()[0])
-	printer.feed(3)
-except:
-	printer.boldOn()
-	printer.println('Network is unreachable.')
-	printer.boldOff()
-	printer.print('Connect display and keyboard\n'
-	  'for network troubleshooting.')
-	printer.feed(3)
-	exit(0)
+#try:
+#	s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+#	s.connect(('8.8.8.8', 0))
+#	printer.print('My IP address is ' + s.getsockname()[0])
+#	printer.feed(3)
+#except:
+#	printer.boldOn()
+#	printer.println('Network is unreachable.')
+#	printer.boldOff()
+#	printer.print('Connect display and keyboard\n'
+#	  'for network troubleshooting.')
+#	printer.feed(3)
+#	exit(0)
 
 # Print greeting image
-printer.printImage(Image.open('gfx/hello.png'), True)
-printer.feed(3)
+# printer.printImage(Image.open('gfx/hello.png'), True)
+# printer.feed(3)
 GPIO.output(ledPin, GPIO.LOW)
 
 # Poll initial button state and time

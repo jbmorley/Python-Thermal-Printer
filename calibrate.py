@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 #
 # Thermal calibration utility for Adafruit_Thermal Python library.
 # Run this utility before using the printer for the first time, any

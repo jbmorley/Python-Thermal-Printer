@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3 
 
 # Weather forecast for Raspberry Pi w/Adafruit Mini Thermal Printer.
 # Retrieves data from DarkSky.net's API, prints current conditions and

@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 
 # Current time and temperature display for Raspberry Pi w/Adafruit Mini
 # Thermal Printer.  Retrieves data from DarkSky.net's API, prints current
