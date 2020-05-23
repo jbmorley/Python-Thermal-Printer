@@ -22,6 +22,8 @@ import socket
 import subprocess
 import time
 
+import requests
+
 from PIL import Image
 from Adafruit_Thermal import *
 
@@ -35,21 +37,47 @@ lastId       = '1'   # State information passed to/from interval script
 printer      = Adafruit_Thermal("/dev/serial0", 19200, timeout=5)
 
 
+class LED(object):
+
+  def __enter__(self):
+    GPIO.output(ledPin, GPIO.HIGH)
+    return self
+
+  def __exit__(self, *args):
+    GPIO.output(ledPin, GPIO.LOW)
+
+
 # Called when button is briefly tapped.  Invokes time/temperature script.
 def tap():
-  GPIO.output(ledPin, GPIO.HIGH)  # LED on while working
-  now = datetime.datetime.now()
-  release = now + datetime.timedelta(days=3)
-  release_string = release.strftime("%A, %e %B")
-  printer.feed(3)
-  printer.boldOn()
-  printer.print(f"Release {release_string}.")
-  printer.boldOff()
-  printer.feed(3)
-  printer.print("Have a nice day <3")
-  printer.feed(6)
-  GPIO.output(ledPin, GPIO.LOW)
+  with LED():
+    # Release date.
+    now = datetime.datetime.now()
+    release = now + datetime.timedelta(days=2)
+    release_string = release.strftime("%A, %e %B at %H:%M")
+    printer.print(f"Your mail can be released from quarantine on {release_string}.")
+    printer.feed(3)
+    
+    # Quote.
+    text, author = get_quote()
+    printer.println(text)
+    printer.print(f"- {author}")
+    printer.justify('R')
+    printer.feed(3)
+    printer.justify('L')
+    
+    # Statement.
+    printer.justify('C')
+    printer.println("Share and Enjoy <3")
+    printer.justify('L')
+    printer.feed(3)
 
+
+def get_quote():
+  response = requests.get("https://www.adafruit.com/api/quotes.php")
+  json = response.json()
+  text, author = json[0]["text"], json[0]["author"]
+  return (text, author)
+  
 
 # Called when button is held down.  Prints image, invokes shutdown process.
 def hold():
