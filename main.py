@@ -66,22 +66,12 @@ def hold():
 # Invokes twitter script.
 def interval():
   return
-  GPIO.output(ledPin, GPIO.HIGH)
-  p = subprocess.Popen(["python3", "twitter.py", str(lastId)],
-    stdout=subprocess.PIPE)
-  GPIO.output(ledPin, GPIO.LOW)
-  return p.communicate()[0] # Script pipes back lastId, returned to main
 
 
 # Called once per day (6:30am by default).
 # Invokes weather forecast and sudoku-gfx scripts.
 def daily():
   return
-  pass
-  GPIO.output(ledPin, GPIO.HIGH)
-  subprocess.call(["python3", "forecast.py"])
-  subprocess.call(["python3", "sudoku-gfx.py"])
-  GPIO.output(ledPin, GPIO.LOW)
 
 
 # Initialization
@@ -103,24 +93,7 @@ GPIO.output(ledPin, GPIO.HIGH)
 printer.print("Hello!")
 printer.feed(3)
 
-# Show IP address (if network is available)
-#try:
-#	s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-#	s.connect(('8.8.8.8', 0))
-#	printer.print('My IP address is ' + s.getsockname()[0])
-#	printer.feed(3)
-#except:
-#	printer.boldOn()
-#	printer.println('Network is unreachable.')
-#	printer.boldOff()
-#	printer.print('Connect display and keyboard\n'
-#	  'for network troubleshooting.')
-#	printer.feed(3)
-#	exit(0)
 
-# Print greeting image
-# printer.printImage(Image.open('gfx/hello.png'), True)
-# printer.feed(3)
 GPIO.output(ledPin, GPIO.LOW)
 
 # Poll initial button state and time
