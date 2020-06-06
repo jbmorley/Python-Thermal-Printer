@@ -50,6 +50,9 @@ class LED(object):
 # Called when button is briefly tapped.  Invokes time/temperature script.
 def tap():
   with LED():
+    # White space.
+    printer.feed(6)
+    
     # Release date.
     now = datetime.datetime.now()
     release = now + datetime.timedelta(days=2)
