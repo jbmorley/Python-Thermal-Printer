@@ -18,6 +18,9 @@ from __future__ import print_function
 
 import RPi.GPIO as GPIO
 import datetime
+import glob
+import logging
+import os
 import socket
 import subprocess
 import time
@@ -27,6 +30,12 @@ import requests
 from PIL import Image
 from Adafruit_Thermal import *
 
+ROOT_DIRECTORY = os.path.dirname(os.path.abspath(__file__))
+QUEUE_DIRECTORY = os.path.join(ROOT_DIRECTORY, "queue")
+
+verbose = '--verbose' in sys.argv[1:] or '-v' in sys.argv[1:]
+logging.basicConfig(level=logging.DEBUG if verbose else logging.INFO, format="[%(levelname)s] %(message)s")
+
 ledPin       = 18
 buttonPin    = 23
 holdTime     = 2     # Duration for button hold (shutdown)
@@ -35,6 +44,20 @@ nextInterval = 0.0   # Time of next recurring operation
 dailyFlag    = False # Set after daily trigger occurs
 lastId       = '1'   # State information passed to/from interval script
 printer      = Adafruit_Thermal("/dev/serial0", 19200, timeout=5)
+
+
+class Chdir(object):
+
+    def __init__(self, path):
+        self.path = os.path.abspath(path)
+
+    def __enter__(self):
+        self.pwd = os.getcwd()
+        os.chdir(self.path)
+        return self.path
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        os.chdir(self.pwd)
 
 
 class LED(object):
@@ -52,14 +75,14 @@ def tap():
   with LED():
     # White space.
     printer.feed(6)
-    
+
     # Release date.
     now = datetime.datetime.now()
     release = now + datetime.timedelta(days=2)
     release_string = release.strftime("%A, %e %B at %H:%M")
     printer.print(f"Your mail can be released from quarantine on {release_string}.")
     printer.feed(3)
-    
+
     # Quote.
     text, author = get_quote()
     printer.println(text)
@@ -67,7 +90,7 @@ def tap():
     printer.justify('R')
     printer.feed(3)
     printer.justify('L')
-    
+
     # Statement.
     printer.justify('C')
     printer.println("Share and Enjoy <3")
@@ -80,7 +103,7 @@ def get_quote():
   json = response.json()
   text, author = json[0]["text"], json[0]["author"]
   return (text, author)
-  
+
 
 # Called when button is held down.  Prints image, invokes shutdown process.
 def hold():
@@ -122,6 +145,7 @@ GPIO.output(ledPin, GPIO.HIGH)
 # time.sleep(30)
 
 printer.print("Hello!")
+# printer.printImage('gfx/hello.png', True)
 printer.feed(3)
 
 
@@ -181,12 +205,13 @@ while(True):
   else:
     dailyFlag = False  # Reset daily trigger
 
-  # Every 30 seconds, run Twitter scripts.  'lastId' is passed around
-  # to preserve state between invocations.  Probably simpler to do an
-  # import thing.
   if t > nextInterval:
-    nextInterval = t + 30.0
-    result = interval()
-    if result is not None:
-      lastId = result.rstrip('\r\n')
-
+    nextInterval = t + 5.0
+    logging.info("Checking spool...")
+    with Chdir(QUEUE_DIRECTORY):
+      files = glob.glob("*.png")
+      for f in files:
+        logging.info("Printing '%s'...", f)
+        printer.printImage(f, False)
+        printer.feed(10)
+        os.remove(f)
