@@ -129,7 +129,8 @@ def daily():
 
 
 # Ensure the queue directory exists.
-os.makedirs(QUEUE_DIRECTORY)
+if not os.path.isdir(QUEUE_DIRECTORY):
+    os.makedirs(QUEUE_DIRECTORY)
 
 # Initialization
 
