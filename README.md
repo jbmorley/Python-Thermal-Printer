@@ -58,7 +58,9 @@ echo -e "This is a test.\\n\\n\\n" > /dev/serial0
 6. Use `cron` to run the management script on startup by adding the following line to your crontab (`crontab -e`):
 
    ```
-   @reboot /usr/bin/python3 /home/pi/Python-Thermal-Printer/main.py
+   @reboot /usr/bin/python3 /home/pi/Projects/Python-Thermal-Printer/main.py
    ```
+   
+   _You will need to update the path to `main.py` dependening on where you cloned the repository._
 
 Let me know if you have any issues.
