@@ -21,14 +21,14 @@ echo -e "This is a test.\\n\\n\\n" > /dev/serial0
    sudo raspi-config
    ```
 
-1. Update the system and install prequisities.
+2. Update the system and install prequisities.
 
    ```
    sudo apt-get update
    sudo apt-get install git cups wiringpi build-essential libcups2-dev libcupsimage2-dev python-serial python-pil python-unidecode
    ```
 
-2. Install the printer driver. Don't worry about the warnings that g++ gives.
+3. Install the printer driver. Don't worry about the warnings that g++ gives.
 
    ```
    git clone https://github.com/adafruit/zj-58
@@ -37,14 +37,14 @@ echo -e "This is a test.\\n\\n\\n" > /dev/serial0
    sudo ./install
    ```
 
-3. Make the printer the default printer. This is useful if you are going to be doing other things with it.
+4. Make the printer the default printer. This is useful if you are going to be doing other things with it.
 
    ```
    sudo lpadmin -p ZJ-58 -E -v "serial:/dev/serial0?baud=19200" -m zjiang/ZJ-58.ppd
    sudo lpoptions -d ZJ-58
    ```
 
-4. Install the Python dependencies:
+5. Install the Python dependencies:
 
    ```bash
    sudo apt-get install --yes python3-pip
@@ -53,7 +53,7 @@ echo -e "This is a test.\\n\\n\\n" > /dev/serial0
        pyserial
    ```
 
-5. Restart the system. Clone this repository and try to run *printertest.py*.
+6. Restart the system. Clone this repository and try to run *printertest.py*.
 
    ```
    git clone https://github.com/galacticfan/Python-Thermal-Printer/
@@ -61,7 +61,7 @@ echo -e "This is a test.\\n\\n\\n" > /dev/serial0
    python3 printertest.py
    ```
    
-6. Use `cron` to run the management script on startup by adding the following line to your crontab (`crontab -e`):
+7. Use `cron` to run the management script on startup by adding the following line to your crontab (`crontab -e`):
 
    ```
    @reboot /usr/bin/python3 /home/pi/Projects/Python-Thermal-Printer/main.py
