@@ -42,7 +42,9 @@ Install the Python dependencies:
 
 ```bash
 sudo apt-get install --yes python3-pip
-pip3 install --user Pillow
+pip3 install --user \
+    Pillow \
+    pyserial
 ```
 
 Restart the system. Clone this repository and try to run *printertest.py*.
