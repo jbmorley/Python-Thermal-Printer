@@ -62,5 +62,3 @@ echo -e "This is a test.\\n\\n\\n" > /dev/serial0
    ```
    
    _You will need to update the path to `main.py` dependening on where you cloned the repository._
-
-Let me know if you have any issues.
