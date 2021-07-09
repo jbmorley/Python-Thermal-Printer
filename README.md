@@ -21,15 +21,15 @@ echo -e "This is a test.\\n\\n\\n" > /dev/serial0
    sudo raspi-config
    ```
 
-   ![](interface-options.png)
+   ![](screenshots/interface-options.png)
 
-   ![](serial-port.png)
+   ![](screenshots/serial-port.png)
 
-   ![](login-shell.png)
+   ![](screenshots/login-shell.png)
 
-   ![](hardware.png)
+   ![](screenshots/hardware.png)
 
-   ![](summary.png)
+   ![](screenshots/summary.png)
 
 2. Update the system and install perquisites.
 
