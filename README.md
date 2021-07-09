@@ -54,5 +54,11 @@ echo -e "This is a test.\\n\\n\\n" > /dev/serial0
    cd Python-Thermal-Printer
    python3 printertest.py
    ```
+   
+6. Use `cron` to run the management script on startup by adding the following line to your crontab (`crontab -e`):
+
+   ```
+   @reboot /usr/bin/python3 /home/pi/Python-Thermal-Printer/main.py
+   ```
 
 Let me know if you have any issues.
