@@ -38,6 +38,13 @@ sudo lpadmin -p ZJ-58 -E -v "serial:/dev/serial0?baud=19200" -m zjiang/ZJ-58.ppd
 sudo lpoptions -d ZJ-58
 ```
 
+Install the Python dependencies:
+
+```bash
+sudo apt-get install --yes python3-pip
+pip3 install --user Pillow
+```
+
 Restart the system. Clone this repository and try to run *printertest.py*.
 
 ```
