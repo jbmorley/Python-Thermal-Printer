@@ -34,7 +34,7 @@ sudo ./install
 Make the printer the default printer. This is useful if you are going to be doing other things with it.
 
 ```
-sudo lpadmin -p ZJ-58 -E -v serial:/dev/serial0?baud=19200 -m zjiang/ZJ-58.ppd
+sudo lpadmin -p ZJ-58 -E -v "serial:/dev/serial0?baud=19200" -m zjiang/ZJ-58.ppd
 sudo lpoptions -d ZJ-58
 ```
 
