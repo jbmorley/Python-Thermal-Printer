@@ -128,6 +128,9 @@ def daily():
   return
 
 
+# Ensure the queue directory exists.
+os.makedirs(QUEUE_DIRECTORY)
+
 # Initialization
 
 # Use Broadcom pin numbers (not Raspberry Pi pin numbers) for GPIO
