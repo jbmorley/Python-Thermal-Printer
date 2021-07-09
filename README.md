@@ -15,6 +15,12 @@ echo -e "This is a test.\\n\\n\\n" > /dev/serial0
 
 ### Installing
 
+1. Enable the serial port.
+
+   ```bash
+   sudo raspi-config
+   ```
+
 1. Update the system and install prequisities.
 
    ```
