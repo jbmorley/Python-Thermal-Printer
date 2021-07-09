@@ -21,7 +21,17 @@ echo -e "This is a test.\\n\\n\\n" > /dev/serial0
    sudo raspi-config
    ```
 
-2. Update the system and install prequisities.
+   ![](interface-options.png)
+
+   ![](serial-port.png)
+
+   ![](login-shell.png)
+
+   ![](hardware.png)
+
+   ![](summary.png)
+
+2. Update the system and install perquisites.
 
    ```
    sudo apt-get update
@@ -60,11 +70,11 @@ echo -e "This is a test.\\n\\n\\n" > /dev/serial0
    cd Python-Thermal-Printer
    python3 printertest.py
    ```
-   
+
 7. Use `cron` to run the management script on startup by adding the following line to your crontab (`crontab -e`):
 
    ```
    @reboot /usr/bin/python3 /home/pi/Projects/Python-Thermal-Printer/main.py
    ```
-   
-   _You will need to update the path to `main.py` dependening on where you cloned the repository._
+
+   _You will need to update the path to `main.py` depending on where you cloned the repository._
